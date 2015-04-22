@@ -13,24 +13,6 @@ logger = logging.getLogger( __name__ )
 TIMEOUT = 100
 
 _global_lock = None
-# UDP packet format
-# BYTE 0-1: Magic number 0xAA 0x55
-# BYTE 2: Node ID
-#   0: new device
-# BYTE 3-6: IP address
-# BYTE 7-8: Port
-# BYTE 9: payload type
-#       1 : Property change
-#       2 : Node Info
-
-# Type 1
-# BYTE 10: Number of property change
-# BYTE 11: Property payload
-# BYTE 12: Property number
-# BYTE 13: Property Length
-# BYTE 14-14+$(11): Property Value
-# Type 2:
-#    No payload
 # The complete design document is available at
 #    https://docs.google.com/document/d/1IrsSE-QA0cvoSgMTKLS3NJvTj24pOzujBMnZ8_1AxWk/edit?usp=sharing
 class UDPTransport(object):
