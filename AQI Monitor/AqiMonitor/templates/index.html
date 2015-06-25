@@ -1,0 +1,117 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+  <head>
+    <title>
+      AQI Real-time Monitor
+    </title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    
+    <script src="http://code.jquery.com/jquery-1.9.1.js" type="text/javascript"></script>
+    <script src="http://code.highcharts.com/highcharts.js" type="text/javascript"></script>
+    <script src="http://code.highcharts.com/modules/exporting.js" type="text/javascript"></script>
+
+  </head>
+  <body>
+      <script type="text/javascript">
+       /*
+       $.ajax({
+                              type: 'GET',
+                              url: 'http://localhost:8888/MainHandler',
+                              data: {"comment" : "123"}
+                              success: function(data) {
+                                  alert(data.msg);
+                              }
+                            });*/
+  $(function () {
+    $(document).ready(function () {
+        Highcharts.setOptions({
+            global: {
+                useUTC: false
+            }
+        });
+
+        $('#container').highcharts({
+            chart: {
+                type: 'spline',
+                animation: Highcharts.svg, // don't animate in old IE
+                marginRight: 10,
+                events: {
+                    load: function () {
+
+                        // set up the updating of the chart each second
+                        var series = this.series[0];
+                        setInterval(function () {
+                            $(function (){ 
+                             $.ajax({
+                              type: 'GET',
+                              url: '/ajax',
+                              success: function(data) {
+                                eval("var value = " +data);
+                                console.log('success', value.value);
+                                var val = parseFloat(value.value);
+                                var x = (new Date()).getTime(), // current time
+                                y = val;
+                                series.addPoint([x, y], true, true);
+                              }
+                            });
+                });
+                        }, 5000);
+                    }
+                }
+            },
+            title: {
+                text: 'AQI Real-Time Monitor'
+            },
+            xAxis: {
+                type: 'datetime',
+                tickPixelInterval: 150
+            },
+            yAxis: {
+                title: {
+                    text: 'Air Quality Index(AQI)'
+                },
+                plotLines: [{
+                    value: 0,
+                    width: 1,
+                    color: '#808080'
+                }]
+            },
+            tooltip: {
+                formatter: function () {
+                    return '<b>' + this.series.name + '</b><br/>' +
+                        Highcharts.dateFormat('%Y-%m-%d %H:%M:%S', this.x) + '<br/>' +
+                        Highcharts.numberFormat(this.y, 2);
+                }
+            },
+            legend: {
+                enabled: false
+            },
+            exporting: {
+                enabled: false
+            },
+            series: [{
+                name: 'AQI Data',
+                data: (function () {
+                    // generate an array of random data
+                    var data = [],
+                        time = (new Date()).getTime(),
+                        i;
+
+                    for (i = -19; i <= 0; i += 1) {
+                        data.push({
+                            x: time + i * 1000,
+                            y: 0
+                        });
+                    }
+                    return data;
+                }())
+            }]
+        });
+    });
+});
+
+    </script>
+    <div id="container" style="min-width: 400px; height: 400px; margin: 0 auto"></div>
+
+  </body>
+</html>

@@ -1,0 +1,9 @@
+<WuKong>
+    <WuClass name="Threshold" appCanCreateInstances="true"/>
+    <WuClass name="Dust_Sensor" appCanCreateInstances="false">
+        <CreateInstance />
+    </WuClass>
+    <WuClass name="LED" appCanCreateInstances="false">
+        <CreateInstance />
+    </WuClass>
+</WuKong>
